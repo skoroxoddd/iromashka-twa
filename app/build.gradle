@@ -111,12 +111,6 @@ android {
         // to be played when removing splash screen. The default is 0 (no animation).
         resValue "integer", "splashScreenFadeOutDuration", twaManifest.splashScreenFadeOutDuration.toString()
     }
-    buildTypes {
-        release {
-            minifyEnabled true
-            signingConfig signingConfigs.release
-        }
-    }
     signingConfigs {
         release {
             def keystoreFile = file("../keystore.jks")
@@ -125,6 +119,14 @@ android {
                 storePassword System.getenv("KEYSTORE_PASSWORD") ?: ""
                 keyAlias System.getenv("KEY_ALIAS") ?: ""
                 keyPassword System.getenv("KEY_PASSWORD") ?: ""
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            if (file("../keystore.jks").exists()) {
+                signingConfig signingConfigs.release
             }
         }
     }

@@ -33,12 +33,12 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build Release APK
+    - name: Build Release APK + AAB
       env:
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      run: ./gradlew assembleRelease --stacktrace
+      run: ./gradlew assembleRelease bundleRelease --stacktrace
 
     - name: Rename APK
       run: |
@@ -52,11 +52,25 @@ jobs:
         done
         ls -la
 
+    - name: Rename AAB
+      run: |
+        cd app/build/outputs/bundle/release
+        for f in *.aab; do
+          mv "$f" "iromashka-twa-signed.aab"
+        done
+        ls -la
+
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: iromashka-twa-release
         path: app/build/outputs/apk/release/*.apk
+
+    - name: Upload AAB
+      uses: actions/upload-artifact@v4
+      with:
+        name: iromashka-twa-aab
+        path: app/build/outputs/bundle/release/*.aab
 
     - name: Get version info
       id: version

@@ -41,6 +41,7 @@ def twaManifest = [
 ]
 
 android {
+    namespace 'com.iromashka'
     compileSdkVersion 34
     defaultConfig {
         applicationId twaManifest.applicationId
